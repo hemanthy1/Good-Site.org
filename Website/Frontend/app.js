@@ -4,7 +4,7 @@ const session = require('express-session');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-
+const path = require('path');
 
 const app = express();
 
@@ -38,6 +38,14 @@ app.get('/auth/tiktok', (req, res) => {
     state: 'your_state_value',
   });
   res.redirect(`${url}?${params.toString()}`);
+});
+
+app.get('/TermsOfService', function(req, res) {
+    res.sendFile(path.join(__dirname, '/src/TOS.html'));
+  });
+
+app.get('/PrivacyPolicy', function(req, res) {
+res.sendFile(path.join(__dirname, '/src/PrivacyPolicy.html'));
 });
 
 // app.get('/auth/tiktok/callback', async (req, res) => {
@@ -87,19 +95,48 @@ app.get('/auth/tiktok/callback', async (req, res) => {
   
       // Store the access token in the session
       req.session.accessToken = accessToken;
-  
-      res.redirect('/profile');
+
+      res.redirect('/redirectACT');
     } catch (error) {
       console.error('Error retrieving access token:', error);
       res.status(500).send('Error retrieving access token');
     }
   });
 
+app.get('/redirectACT', async (req, res) => {
+
+    const url = 'https://open.tiktokapis.com/v2/oauth/token/';
+    const params = new URLSearchParams({
+      client_key: process.env.TIKTOK_CLIENT_KEY,
+      client_secret: process.env.TIKTOK_CLIENT_SECRET,
+      code: req.session.accessToken,
+      grant_type: 'authorization_code',
+      redirect_uri: process.env.TIKTOK_REDIRECT_URI,
+    });
+
+    try {
+        const response = await axios.post(url, params, {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' ,'Cache-Control':'no-cache'},
+        });
+    
+        const RealToken = response.data.access_token;
+  
+        console.log(response);
+        console.log(response.access_token);
+        req.session.realToken = RealToken;
+    
+        res.redirect('/profile');
+      } catch (error) {
+        console.error('Error retrieving REAL token:', error.response.data);
+        res.status(500).send('Error retrieving REAL token');
+      }
+});
+
 
   app.get('/profile', async (req, res) => {
     if (!req.session.accessToken) {
       return res.redirect('/auth/tiktok');
-    }
+    }        
   
     const url = 'https://open.tiktokapis.com/v2/user/info/';
     const params = new URLSearchParams({
@@ -109,13 +146,11 @@ app.get('/auth/tiktok/callback', async (req, res) => {
     try {
       const response = await axios.get(`${url}?${params.toString()}`, {
         headers: {
-          Authorization: `Bearer act.${req.session.accessToken}`,
+          Authorization: `Bearer ${req.session.realToken}`,
         },
       });
-      res.send({
-        accessToken: req.session.accessToken,
-      });
-      const userData = response.data.user;
+     
+      const userData = response.data.data.user;
   
       res.send(`
         <h1>Welcome, ${userData.display_name}!</h1>
