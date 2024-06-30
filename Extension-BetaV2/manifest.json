@@ -1,0 +1,24 @@
+{    
+    "manifest_version": 3,
+    "name": "TikTok Authentication Extension",
+    "version": "1.0",
+    "description": "Summarizes privacy policy and terms of service of websites.",
+   "permissions": [
+    "identity",
+    "storage",
+    "offscreen",
+    "activeTab",
+    "scripting",
+    "tabs"
+    ],
+    "action": {
+      "default_icon": "Privacy.png"
+    },
+    "host_permissions": [
+    "https://good-site.org/*",
+    "https://*/"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    }
+  }

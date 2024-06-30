@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok User Info</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        #avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        #user-info {
+            display: flex;
+            align-items: center;
+        }
+        #login-message {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-info">
+        <img id="avatar" src="" alt="User Avatar">
+        <h2 id="display-name"></h2>
+    </div>
+    <p id="login-message">Please log in to see your TikTok information.</p>
+    <script src="popup.js"></script>
+</body>
+</html>

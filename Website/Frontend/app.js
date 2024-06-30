@@ -9,8 +9,11 @@ const path = require('path');
 const app = express();
 
 app.use(cookieParser());
-app.use(cors());
-
+// app.use(cors());
+app.use(cors({
+    origin: 'chrome-extension://kmedcmoleafpdkililnejnmkkfgjhnhc',
+    credentials: true
+  }));
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
@@ -151,16 +154,34 @@ app.get('/redirectACT', async (req, res) => {
       });
      
       const userData = response.data.data.user;
-  
-      res.send(`
-        <h1>Welcome, ${userData.display_name}!</h1>
-        <img src="${userData.avatar_url}" alt="Avatar" />
-      `);
+      const redirectUrl = `/profile-info?display_name=${encodeURIComponent(userData.display_name)}&avatar_url=${encodeURIComponent(userData.avatar_url)}`;
+      res.redirect(redirectUrl);
+
     } catch (error) {
       console.error('Error retrieving user profile:', error.response.data);
       res.status(500).send('Error retrieving user profile');
     }
+    //   res.send(`
+    //     <h1>Welcome, ${userData.display_name}!</h1>
+    //     <img src="${userData.avatar_url}" alt="Avatar" />
+    //   `);
+    // } catch (error) {
+    //   console.error('Error retrieving user profile:', error.response.data);
+    //   res.status(500).send('Error retrieving user profile');
+    // }
   });
+
+  app.get('/profile-info', (req, res) => {
+    const displayName = req.query.display_name;
+    const avatarUrl = req.query.avatar_url;
+  
+    res.send(`
+      <h1>Welcome, ${displayName}!</h1>
+      <img src="${avatarUrl}" alt="Avatar" />
+    `);
+  });
+
+  
   
 // Profile route
 // app.get('/profile', async (req, res) => {
