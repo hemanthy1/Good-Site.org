@@ -12,12 +12,12 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-// app.use(cors());
-app.use(cors({
-    origin: 'chrome-extension://kmedcmoleafpdkililnejnmkkfgjhnhc',
-    credentials: true
-}));
+app.use(cors());
+app.use(express.static('src'))
+
 const port = process.env.PORT || 3000;
+
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
@@ -32,6 +32,23 @@ app.use(session({
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/src/Index.html'));
 })
+
+app.get('/Logo.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/Privacy.png'));
+})
+
+app.get('/InUse.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/ExtensionInUse.png'));
+})
+
+app.get('/Extension.zip', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/ExtensionV1.zip'));
+})
+
+app.get('/HowToUse', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/HowTo.html'));
+})
+
 
 // TikTok OAuth routes
 app.get('/auth/tiktok', (req, res) => {

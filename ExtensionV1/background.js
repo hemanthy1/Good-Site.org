@@ -45,11 +45,11 @@ try {
             });
             chrome.tabs.get(tabId, (tab) => {
               if (chrome.runtime.lastError) {
-                console.warn('Tab not found:', chrome.runtime.lastError.message);
+                console.log('Tab not found:', chrome.runtime.lastError.message);
               } else {
                 chrome.tabs.remove(tabId, () => {
                   if (chrome.runtime.lastError) {
-                    console.warn('Error removing tab:', chrome.runtime.lastError.message);
+                    console.log('Error removing tab:', chrome.runtime.lastError.message);
                   } else {
                     console.log('Tab removed successfully');
                   }
@@ -62,7 +62,7 @@ try {
     }
 
     catch (e) {
-      console.warn('Error:', e);
+      console.log('Error:', e);
     }
   };
 
@@ -149,7 +149,7 @@ try {
       console.log('Policy Links:', policyLinks);
       return policyLinks;
     } catch (error) {
-      console.error('Error getting policy links:', error);
+      console.log('Error getting policy links:', error);
       return null;
     }
   }
@@ -165,7 +165,7 @@ try {
       };
       const response = await fetch('http://good-site.org/api/extract-policy', payload);
       if (!response.ok) {
-        console.warn(`HTTP error! Status: ${response.status}`);
+        console.log(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();  // Assuming the response is JSON
       console.log('Data', data);
@@ -173,7 +173,7 @@ try {
       console.log('Policy Content:', data.privacyPolicy);
       return policyText;
     } catch (error) {
-      console.error('Error fetching policy content:', error);
+      console.log('Error fetching policy content:', error);
       return null;
     }
 
@@ -233,7 +233,7 @@ try {
 
       return data.choices[0].message.content;
     } catch (error) {
-      console.error(`Error summarizing ${policyType}:`, error);
+      console.log(`Error summarizing ${policyType}:`, error);
       return `Unable to summarize ${policyType}. An error occurred.`;
     }
   }
@@ -255,7 +255,7 @@ try {
           });
         });
       }).catch(function (error) {
-        console.warn('Error:', error);
+        console.log('Error:', error);
         sendResponse({ success: false });
       });
       return true; 
@@ -264,5 +264,5 @@ try {
 
 }
 catch (e) {
-  console.warn('Error:', e);
+  console.log('Error:', e);
 }

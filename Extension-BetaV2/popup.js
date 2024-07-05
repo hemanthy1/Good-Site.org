@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('avatarUrl').src = data.avatarUrl;
             document.getElementById('loginButton').style.display = 'none';
         } else {
-            document.getElementById('userInfo').textContent = 'User not logged in.';
+            document.getElementById('userInfo').textContent = '';
             document.getElementById('loginButton').style.display = 'block';
         }
 
@@ -62,5 +62,5 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         });
       });
-      
+
 });
