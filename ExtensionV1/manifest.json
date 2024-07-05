@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Good-Site",
+  "version": "1.0",
+  "description": "Using AI, summarizes the privacy policy of any website and keeps you informed.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "contextMenus"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "Privacy.png"
+  },
+  "host_permissions": ["https://good-site.org/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["background.js"]
+    }
+  ]
+}
