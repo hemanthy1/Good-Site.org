@@ -17,8 +17,6 @@ app.use(express.static('src'))
 
 const port = process.env.PORT || 3000;
 
-
-
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
@@ -50,7 +48,7 @@ app.get('/HowToUse', (req, res) => {
 })
 
 
-// TikTok OAuth routes
+// TikTok OAuth route
 app.get('/auth/tiktok', (req, res) => {
     const url = 'https://www.tiktok.com/v2/auth/authorize/';
     const params = new URLSearchParams({
@@ -71,41 +69,6 @@ app.get('/PrivacyPolicy', function (req, res) {
     res.sendFile(path.join(__dirname, '/src/PrivacyPolicy.html'));
 });
 
-// app.get('/auth/tiktok/callback', async (req, res) => {
-//     const { code, state } = req.query;
-//     if (state !== 'your_state_value') {
-//       return res.status(403).send('Invalid state');
-//     }
-
-//     const url = 'https://open-api.tiktok.com/oauth/access_token/';
-//     const params = new URLSearchParams({
-//       client_key: process.env.TIKTOK_CLIENT_KEY,
-//       client_secret: process.env.TIKTOK_CLIENT_SECRET,
-//       code: code,
-//       grant_type: 'authorization_code',
-//     });
-
-//     try {
-//       const response = await axios.post(url, params, {
-//         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-//       });
-
-//       const accessToken = response.data.access_token;
-//       const refreshToken = response.data.data.refresh_token;
-//       const openId = response.data.data.open_id;
-
-//       // Store the access token, refresh token, and open ID in the session
-//       req.session.accessToken = accessToken;
-//       req.session.refreshToken = refreshToken;
-//       req.session.openId = openId;
-
-//       res.redirect('/profile');
-//     } catch (error) {
-//       console.error('Error retrieving access token:', error.response.data);
-//       res.status(500).send('Error retrieving access token');
-//     }
-//   });
-
 app.get('/auth/tiktok/callback', async (req, res) => {
     const { code, state } = req.query;
     if (state !== 'your_state_value') {
@@ -113,10 +76,8 @@ app.get('/auth/tiktok/callback', async (req, res) => {
     }
 
     try {
-        // Extract the access token from the authorization code
         const accessToken = code;
 
-        // Store the access token in the session
         req.session.accessToken = accessToken;
 
         res.redirect('/redirectACT');
@@ -181,14 +142,7 @@ app.get('/profile', async (req, res) => {
         console.error('Error retrieving user profile:', error.response.data);
         res.status(500).send('Error retrieving user profile');
     }
-    //   res.send(`
-    //     <h1>Welcome, ${userData.display_name}!</h1>
-    //     <img src="${userData.avatar_url}" alt="Avatar" />
-    //   `);
-    // } catch (error) {
-    //   console.error('Error retrieving user profile:', error.response.data);
-    //   res.status(500).send('Error retrieving user profile');
-    // }
+
 });
 
 app.get('/profile-info', (req, res) => {
@@ -206,20 +160,16 @@ async function fetchPrivacyPolicy(url) {
     const $ = cheerio.load(data);
     let policyText = '';
 
-    // // Strategy: Find common headings and search within their sibling or child elements
-    // $('h1, h2, h3, h4, h5, h6').each((i, element) => {
-    //     const heading = $(element).text().toLowerCase();
-
-    //     const section = $(element).nextAll().map((j, el) => $(el).text()).get().join(' ');
-    //     policyText += section;
-
-    // });
-    // const heading = $('h1').text().toLowerCase();
-
     const section = $('h1').nextAll().map((j, el) => $(el).text()).get().join(' ');
     policyText += section;
     const paragraphs = $('p').map((index, element) => $(element).text()).get();
     policyText += paragraphs;
+
+    policyText = policyText.replace(/(\r\n|\n|\r)/gm, "");
+
+    if (policyText.length > 119000) {
+        policyText = policyText.slice(0, 119000);
+    }
 
     return policyText.trim();
 }
@@ -249,36 +199,8 @@ app.post('/api/extract-policy', async (req, res) => {
                     "Description": "Privacy policy cannot be properly interpreted. This will be remedied in the future"
                 }]
             }`
-        
+
         });
-        // res.status(500).send('Error extracting privacy policy');
+
     }
 });
-
-// Profile route
-// app.get('/profile', async (req, res) => {
-//   if (!req.session.accessToken) {
-//     return res.redirect('/auth/tiktok');
-//   }
-
-//   res.send({
-//     accessToken: req.session.accessToken,
-//   });
-
-//   const url = 'https://open-api.tiktok.com/user/info/';
-//   const params = new URLSearchParams({
-//     access_token: req.session.accessToken,
-//     fields: 'open_id,union_id,avatar_url,display_name',
-//   });
-//   try {
-//     const response = await axios.get(`${url}?${params.toString()}`);
-//     const profile = response.data.data.user;
-//     res.send(`
-//       <h1>Welcome, ${profile.display_name}!</h1>
-//       <img src="${profile.avatar_url}" alt="Avatar" />
-//     `);
-//   } catch (error) {
-//     console.error('Error retrieving user profile:', error.response.data);
-//     res.status(500).send('Error retrieving user profile');
-//   }
-// });
