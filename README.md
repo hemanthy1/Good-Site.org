@@ -22,7 +22,7 @@ Empowering you to understand the privacy implications of all the websites you vi
 
 ## Learn More
 
-Visit our website at [Good-Site.org](https://www.good-site.org) to learn more about the extension, watch tutorials, and download it for your browser.
+Visit the website at [Good-Site.org](https://www.good-site.org) to learn more about the extension, watch tutorials, and download it for your browser.
 
 ## Contributing
 
@@ -45,7 +45,7 @@ If you have any questions, suggestions, or feedback, please feel free to reach o
 - Email: hemanthy@gmail.com
 - GitHub: [hemanthy1](https://github.com/hemanthy1)
 
-We'd love to hear from you!
+I'd love to hear from you!
 
 ---
 
