@@ -15,47 +15,18 @@ Empowering you to understand the privacy implications of all the websites you vi
 ## Features
 
 - 🔒 Concise summaries of privacy policies
-- 📝 Key points from terms of service
 - ⚖️ Pros and cons of the website's data practices
 - 🚀 Powered by advanced AI (GPT-4o)
 - 🌐 Works on all websites
 - 🧩 Easy to install and use
 
-## Installation
+## Learn More
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/your-username/good-site.org.git
-   ```
-
-2. Navigate to the project directory:
-   ```
-   cd good-site.org
-   ```
-
-3. Install the required dependencies:
-   ```
-   npm install
-   ```
-
-4. Build the extension:
-   ```
-   npm run build
-   ```
-
-5. Load the extension in your browser:
-   - Chrome: Go to `chrome://extensions`, enable "Developer mode", click "Load unpacked", and select the `build` folder.
-   - Firefox: Go to `about:debugging`, click "Load Temporary Add-on", and select the `manifest.json` file in the `build` folder.
-
-## Usage
-
-1. Click on the Good-site.org extension icon in your browser toolbar.
-2. The extension will analyze the current website's privacy policy and terms of service.
-3. You'll see a summary of the key points, along with brief descriptions and pros/cons of the website's data practices.
+Visit our website at [Good-Site.org](https://www.good-site.org) to learn more about the extension, watch tutorials, and download it for your browser.
 
 ## Contributing
 
-We welcome contributions from the community! If you'd like to contribute to Good-site.org, please follow these steps:
+I welcome contributions from the community! If you'd like to contribute to Good-Site.org, please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.
@@ -65,15 +36,14 @@ We welcome contributions from the community! If you'd like to contribute to Good
 
 ## License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-If you have any questions, suggestions, or feedback, please feel free to reach out to us:
+If you have any questions, suggestions, or feedback, please feel free to reach out to me:
 
-- Email: info@good-site.org
-- Twitter: [@goodsiteorg](https://twitter.com/goodsiteorg)
-- GitHub: [your-username](https://github.com/your-username)
+- Email: hemanthy@gmail.com
+- GitHub: [hemanthy1](https://github.com/hemanthy1)
 
 We'd love to hear from you!
 
