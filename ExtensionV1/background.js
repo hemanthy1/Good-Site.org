@@ -201,7 +201,7 @@ try {
       return `Unable to summarize ${policyType}. Content not found.`;
     }
     try {
-      const openaiApiKey = 'sk-proj-hyrIffr9kU7d6DEHL4LOT3BlbkFJdvcjv7y7AaBT0Tje2x51';
+      const openaiApiKey = 'DOWNLOAD FROM GOOD-SITE.ORG TO ACCESS';
       const systemPrompt = `You are a professional html reader and summarizer, skilled in reading Privacy Policies. You will ignore all the unneccessary information not pertaining to the Privacy Policy. Please summarize the Privacy Policy provided by the user in terms of pros and cons. Your response will ALWAYS be in the json format {Pros:[List of Pros in the format {Main Point:Main Point, Description:Description}], Cons:[List of Cons in the format {Main Point:Main Point, Description:Description}]}. `;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
