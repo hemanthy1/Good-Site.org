@@ -1,4 +1,4 @@
-# Good-Site.org | Understand Your Privacy
+# [Good-Site.org](https://www.good-site.org) | Understand Your Privacy
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
