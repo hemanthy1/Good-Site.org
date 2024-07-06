@@ -1,3 +1,4 @@
+// Modules
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
@@ -8,45 +9,27 @@ const path = require('path');
 const cheerio = require('cheerio');
 
 const app = express();
-
 app.use(cookieParser());
 app.use(express.json());
-
 app.use(cors());
 app.use(express.static('src'))
 
 const port = process.env.PORT || 3000;
-
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
+//Tiktok OAuth requires a session
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
 }));
 
+//Home Page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/src/Index.html'));
 })
-
-app.get('/Logo.png', (req, res) => {
-    res.sendFile(path.join(__dirname, '/src/Privacy.png'));
-})
-
-app.get('/InUse.png', (req, res) => {
-    res.sendFile(path.join(__dirname, '/src/ExtensionInUse.png'));
-})
-
-app.get('/Extension.zip', (req, res) => {
-    res.sendFile(path.join(__dirname, '/src/ExtensionV1.zip'));
-})
-
-app.get('/HowToUse', (req, res) => {
-    res.sendFile(path.join(__dirname, '/src/HowTo.html'));
-})
-
 
 // TikTok OAuth route
 app.get('/auth/tiktok', (req, res) => {
@@ -61,14 +44,7 @@ app.get('/auth/tiktok', (req, res) => {
     res.redirect(`${url}?${params.toString()}`);
 });
 
-app.get('/TermsOfService', function (req, res) {
-    res.sendFile(path.join(__dirname, '/src/TOS.html'));
-});
-
-app.get('/PrivacyPolicy', function (req, res) {
-    res.sendFile(path.join(__dirname, '/src/PrivacyPolicy.html'));
-});
-
+//TikTok callback
 app.get('/auth/tiktok/callback', async (req, res) => {
     const { code, state } = req.query;
     if (state !== 'your_state_value') {
@@ -87,8 +63,8 @@ app.get('/auth/tiktok/callback', async (req, res) => {
     }
 });
 
+//Redirect to get access token
 app.get('/redirectACT', async (req, res) => {
-
     const url = 'https://open.tiktokapis.com/v2/oauth/token/';
     const params = new URLSearchParams({
         client_key: process.env.TIKTOK_CLIENT_KEY,
@@ -116,7 +92,7 @@ app.get('/redirectACT', async (req, res) => {
     }
 });
 
-
+//Profile route
 app.get('/profile', async (req, res) => {
     if (!req.session.accessToken) {
         return res.redirect('/auth/tiktok');
@@ -145,6 +121,7 @@ app.get('/profile', async (req, res) => {
 
 });
 
+//Profile info route
 app.get('/profile-info', (req, res) => {
     const displayName = req.query.display_name;
     const avatarUrl = req.query.avatar_url;
@@ -155,26 +132,7 @@ app.get('/profile-info', (req, res) => {
     `);
 });
 
-async function fetchPrivacyPolicy(url) {
-    const { data } = await axios.get(url);
-    const $ = cheerio.load(data);
-    let policyText = '';
-
-    const section = $('h1').nextAll().map((j, el) => $(el).text()).get().join(' ');
-    policyText += section;
-    const paragraphs = $('p').map((index, element) => $(element).text()).get();
-    policyText += paragraphs;
-
-    policyText = policyText.replace(/(\r\n|\n|\r)/gm, "");
-
-    if (policyText.length > 119000) {
-        policyText = policyText.slice(0, 119000);
-    }
-
-    return policyText.trim();
-}
-
-
+// REST API to parse privacy policy from url
 app.post('/api/extract-policy', async (req, res) => {
     const { url } = req.body;
     if (!url) {
@@ -204,3 +162,51 @@ app.post('/api/extract-policy', async (req, res) => {
 
     }
 });
+
+// Function to parse privacy policy from URL
+async function fetchPrivacyPolicy(url) {
+    const { data } = await axios.get(url);
+    const $ = cheerio.load(data);
+    let policyText = '';
+
+    const section = $('h1').nextAll().map((j, el) => $(el).text()).get().join(' ');
+    policyText += section;
+    const paragraphs = $('p').map((index, element) => $(element).text()).get();
+    policyText += paragraphs;
+
+    policyText = policyText.replace(/(\r\n|\n|\r)/gm, "");
+
+    if (policyText.length > 119000) {
+        policyText = policyText.slice(0, 119000);
+    }
+
+    return policyText.trim();
+}
+
+// TOS Route
+app.get('/TermsOfService', function (req, res) {
+    res.sendFile(path.join(__dirname, '/src/TOS.html'));
+});
+
+// Privacy Policy Route
+app.get('/PrivacyPolicy', function (req, res) {
+    res.sendFile(path.join(__dirname, '/src/PrivacyPolicy.html'));
+});
+
+// How to use Route
+app.get('/HowToUse', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/HowTo.html'));
+})
+
+//Media Routes
+app.get('/Logo.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/Privacy.png'));
+})
+
+app.get('/InUse.png', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/ExtensionInUse.png'));
+})
+
+app.get('/Extension.zip', (req, res) => {
+    res.sendFile(path.join(__dirname, '/src/ExtensionV1.zip'));
+})
